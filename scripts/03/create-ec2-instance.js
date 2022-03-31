@@ -24,9 +24,9 @@ const keyName = 'hamster_key'
 // Do all the things together
 async function execute () {
   try {
-    await createSecurityGroup(sgName)
-    const keyPair = await createKeyPair(keyName)
-    await helpers.persistKeyPair(keyPair)
+    //await createSecurityGroup(sgName)
+    //const keyPair = await createKeyPair(keyName)
+    //await helpers.persistKeyPair(keyPair)
     const data = await createInstance(sgName, keyName)
     console.log('Created instance with:', data)
   } catch (err) {
