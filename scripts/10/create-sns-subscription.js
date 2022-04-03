@@ -6,8 +6,8 @@ const { sendSNSCommand: sendCommand } = require('./helpers')
 
 // Declare local variables
 const type = 'sms'
-const endpoint = '/* TODO: Add your mobile number with country code */'
-const topicArn = '/* TODO: Add your sns topic arn */'
+const endpoint = '639156481999'
+const topicArn = 'arn:aws:sns:us-east-1:705519027810:hamster-topic'
 
 async function execute () {
   try {
@@ -19,7 +19,14 @@ async function execute () {
 }
 
 function createSubscription (type, topicArn, endpoint) {
-  // TODO: Subscribe to topic
+  const params = {
+    Protocol: type,
+    TopicArn: topicArn,
+    Endpoint: endpoint
+  }
+
+  const command = new SubscribeCommand(params)
+  return sendCommand(command)
 }
 
 execute()

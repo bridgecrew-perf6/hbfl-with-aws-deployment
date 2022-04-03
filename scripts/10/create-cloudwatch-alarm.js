@@ -6,9 +6,9 @@ const { sendCloudWatchCommand: sendCommand } = require('./helpers')
 
 // Declare local variables
 const alarmName = 'hamster-elb-alarm'
-const topicArn = '/* TODO: Add your SNS topic ARN */'
-const tg = '/* TODO: Add last part of Target Group ARN */'
-const lb = '/* TODO: Add last part of Load Balancer ARN */'
+const topicArn = 'arn:aws:sns:us-east-1:705519027810:hamster-topic'
+const tg = 'targetgroup/hamsterTG/0dd7f9abc38e52a7'
+const lb = 'app/hamsterLB/7781338054461c74'
 
 async function execute () {
   try {
@@ -20,7 +20,33 @@ async function execute () {
 }
 
 function createCloudWatchAlarm (alarmName, topicArn, tg, lb) {
-  // TODO: Create alarm with PutMetricAlarmCommand
+  const params = {
+    AlarmName: alarmName,
+    ComparisonOperator: 'LessThanThreshold',
+    EvaluationPeriods: 1,
+    MetricName: 'HealthyHostCount',
+    Namespace: 'AWS/ApplicationELB',
+    Period: 60,
+    Threshold: 1,
+    AlarmActions: [
+      topicArn
+    ],
+    Dimensions: [
+      {
+        Name: 'TargetGroup',
+        Value: tg
+      }, {
+        Name: 'LoadBalancer',
+        Value: lb
+      }
+    ],
+    Statistic: 'Average',
+    TreatMissingData: 'breaching'
+  }
+
+  const command = new PutMetricAlarmCommand(params)
+
+  return sendCommand(command)
 }
 
 execute()
